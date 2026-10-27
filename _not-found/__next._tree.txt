@@ -1,0 +1,4 @@
+:HL["/scent-studio-prototype/_next/static/chunks/0_2v8m595urw6.css","style"]
+2:[["children",{"s":"__PAGE__","h":160}]]
+1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
+0:{"b":"Yk80uZCucsw8ANYCjAMYI","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
