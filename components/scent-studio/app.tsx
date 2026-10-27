@@ -23,20 +23,22 @@ const formulas:Formula[]=[{id:'f1',ref:'SS-24018',customerId:'c1',perfume:'Aster
 const requests:Request[]=[{id:'r1',ref:'SS-NEW-081',customerId:'c6',perfume:'Golden Hour',date:'2026-10-27',strengthId:'parfum',status:'New',lines:seedLines([['bergamot',30],['amber',30],['sandalwood',25],['vanilla',15]])},{id:'r2',ref:'SS-NEW-079',customerId:'c2',perfume:'North Window',date:'2026-10-25',strengthId:'toilette',status:'In Review',lines:seedLines([['lavender',30],['cedar',30],['musk',25],['bergamot',15]])},{id:'r3',ref:'SS-NEW-074',customerId:'c5',perfume:'Rose Atlas',date:'2026-10-22',strengthId:'extrait',status:'Approved',lines:seedLines([['rose',40],['jasmine',25],['oud',15],['amber',20]])}]
 const reorders:Reorder[]=[{id:'o1',formulaId:'f1',customerId:'c1',sizeId:'50',status:'New',date:'2026-10-27'},{id:'o2',formulaId:'f2',customerId:'c2',sizeId:'30',status:'Confirmed',date:'2026-10-24'},{id:'o3',formulaId:'f3',customerId:'c3',sizeId:'10',status:'Completed',date:'2026-10-19'}]
 const total=(lines:Line[])=>lines.reduce((s,l)=>s+l.percentage,0)
+const BASE=process.env.NEXT_PUBLIC_BASE_PATH||''
+const stripBase=(p:string)=>{const r=BASE&&p.startsWith(BASE)?p.slice(BASE.length):p;return r.replace(/\/+$/,'')||'/'}
 const makeRef=()=>`SS-${Math.floor(10000+Math.random()*89999)}`
 
 export default function Page(){
  const [path,setPath]=useState('/')
  const [tab,setTab]=useState('dashboard'); const [menu,setMenu]=useState(false)
  useEffect(()=>{
-  setPath(window.location.pathname)
-  const handlePopState=()=>setPath(window.location.pathname)
+  setPath(stripBase(window.location.pathname))
+  const handlePopState=()=>setPath(stripBase(window.location.pathname))
   window.addEventListener('popstate',handlePopState)
   return ()=>window.removeEventListener('popstate',handlePopState)
  },[])
  const [data,setData]=useState({customers,ingredients, strengths, sizes, formulas, requests, reorders})
  const [selected,setSelected]=useState<Formula|Request|null>(null)
- const go=(p:string)=>{setPath(p); if(typeof window!=='undefined') window.history.pushState({},'',p); setMenu(false)}
+ const go=(p:string)=>{setPath(p); if(typeof window!=='undefined') window.history.pushState({},'',BASE+(p==='/'?'/':p)); setMenu(false)}
  const update=(next:any)=>setData((d:any)=>({...d,...next}))
  if(path.startsWith('/staff')) return <Staff data={data} tab={tab} setTab={setTab} go={go} menu={menu} setMenu={setMenu} selected={selected} setSelected={setSelected} update={update}/>
  if(path.startsWith('/reorder/')) return <ReorderPage id={path.split('/').pop()||''} data={data} update={update} go={go}/>
