@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Copy, FlaskConical, LayoutDashboard, Menu, Package, Plus, Printer, Search, Settings, Sparkles, Users, X } from 'lucide-react'
 
 type Ingredient = { id:string; name:string; category:string; description:string; notes:string; active:boolean }
@@ -26,8 +26,14 @@ const total=(lines:Line[])=>lines.reduce((s,l)=>s+l.percentage,0)
 const makeRef=()=>`SS-${Math.floor(10000+Math.random()*89999)}`
 
 export default function Page(){
- const [path,setPath]=useState(typeof window!=='undefined'?window.location.pathname:'/')
+ const [path,setPath]=useState('/')
  const [tab,setTab]=useState('dashboard'); const [menu,setMenu]=useState(false)
+ useEffect(()=>{
+  setPath(window.location.pathname)
+  const handlePopState=()=>setPath(window.location.pathname)
+  window.addEventListener('popstate',handlePopState)
+  return ()=>window.removeEventListener('popstate',handlePopState)
+ },[])
  const [data,setData]=useState({customers,ingredients, strengths, sizes, formulas, requests, reorders})
  const [selected,setSelected]=useState<Formula|Request|null>(null)
  const go=(p:string)=>{setPath(p); if(typeof window!=='undefined') window.history.pushState({},'',p); setMenu(false)}
