@@ -5,7 +5,7 @@
   "packageManager": "pnpm@12.3.4",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && cp out/index.html out/404.html && touch out/.nojekyll",
+    "build": "next build && node scripts/postbuild.mjs",
     "start": "next start"
   },
   "dependencies": {
